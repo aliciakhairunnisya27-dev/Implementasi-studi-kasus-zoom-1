@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prediksi Keterlambatan Paket (CRISP-DM)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7f9;--card:#fff;--tx:#1d2433;--mut:#5d6679;--bd:#dde1e8;--ac:#2f6fed;--ok:#1f9d55;--wa:#d9822b;--bad:#d64545;--bar:#8aa9ee}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b2030;--tx:#e7eaf2;--mut:#9aa3b8;--bd:#2c3348;--ac:#6b9bff;--ok:#4cc38a;--wa:#f0a45d;--bad:#ff7a7a;--bar:#3f5ea8}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1b2030;--tx:#e7eaf2;--mut:#9aa3b8;--bd:#2c3348;--ac:#6b9bff;--ok:#4cc38a;--wa:#f0a45d;--bad:#ff7a7a;--bar:#3f5ea8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:960px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:0 0 12px}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
+.grid{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.kpi div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.kpi b{display:block;font-size:22px}.kpi span{color:var(--mut);font-size:12.5px}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 3px}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--tx);font-size:14px}.chk input{width:auto}
+button{margin-top:14px;width:100%;padding:10px;border:0;border-radius:8px;background:var(--ac);color:#fff;font:600 15px inherit;cursor:pointer}
+.res{text-align:center;padding:8px 0}
+.pct{font-size:44px;font-weight:700}
+.meter{height:12px;border-radius:6px;background:var(--bd);overflow:hidden;margin:8px 0}
+.meter i{display:block;height:100%;width:0;transition:width .4s}
+.tag{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:600;font-size:13px;color:#fff}
+.why li{margin:3px 0;font-size:13.5px}
+.bar{display:grid;grid-template-columns:110px 1fr 48px;gap:8px;align-items:center;margin:6px 0;font-size:13px}
+.bar i{display:block;height:14px;border-radius:4px;background:var(--bar)}
+.bar .t{background:var(--bd);border-radius:4px}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--bd)}th:first-child,td:first-child{text-align:left}
+.note{font-size:13px;color:var(--mut)}.best{font-weight:700;color:var(--ok)}
+.crisp{display:flex;flex-wrap:wrap;gap:6px}.crisp span{background:var(--bg);border:1px solid var(--bd);border-radius:99px;padding:3px 10px;font-size:12.5px}
+</style>
+</head>
+<body><div class="w">
+<h1>Prediksi Keterlambatan Pengiriman Paket</h1>
+<p class="sub">Studi kasus “Make Sense of Data with Analytics and AI”: CRISP-DM, empat tingkat analitik, dan keputusan akhir tetap di tangan manusia.</p>
+<div class="crisp" style="margin-bottom:16px"><span>1 Business</span><span>2 Data Understanding</span><span>3 Data Preparation</span><span>4 Modeling</span><span>5 Evaluation</span><span>6 Deployment</span></div>
+
+<div class="kpi">
+<div><b>14,3%</b><span>Paket terlambat (deskriptif)</span></div>
+<div><b>32,8%</b><span>Telat saat hujan deras</span></div>
+<div><b>0,41</b><span>F1 model terbaik</span></div>
+<div><b>Rp 208 rb</b><span>Estimasi hemat (data uji)</span></div>
+</div>
+
+<div class="grid">
+<div class="card">
+<h2>Cek Risiko Paket (Prediktif)</h2>
+<div class="row"><div><label for="kota">Kota tujuan</label><select id="kota"></select></div>
+<div><label for="layanan">Layanan</label><select id="layanan"><option>Reguler</option><option>Express</option></select></div></div>
+<div class="row"><div><label for="jarak">Jarak (km)</label><input id="jarak" type="number" min="1" value="1300"></div>
+<div><label for="berat">Berat (kg)</label><input id="berat" type="number" min="0.1" step="0.1" value="2"></div></div>
+<div class="row"><div><label for="jam">Jam order (7–21)</label><input id="jam" type="number" min="7" max="21" value="18"></div>
+<div><label for="peng">Pengalaman kurir (bulan)</label><input id="peng" type="number" min="1" max="48" value="5"></div></div>
+<div class="row"><div><label for="rating">Rating kurir (3–5)</label><input id="rating" type="number" min="3" max="5" step="0.1" value="3.5"></div>
+<div><label for="hujan">Curah hujan maks (mm)</label><input id="hujan" type="number" min="0" value="25"></div></div>
+<label class="chk"><input id="wkend" type="checkbox"> Dikirim akhir pekan</label>
+<button id="go">Hitung Risiko</button>
+</div>
+
+<div class="card">
+<h2>Hasil &amp; Rekomendasi (Preskriptif)</h2>
+<div class="res"><div class="pct" id="pct">–</div>
+<div class="meter"><i id="mt"></i></div>
+<span class="tag" id="tag" style="background:var(--mut)">Belum dihitung</span></div>
+<p id="rec" class="note" style="margin-top:12px">Isi data paket lalu tekan “Hitung Risiko”.</p>
+<ul class="why" id="why"></ul>
+<p class="note">Ambang tinjau = <b id="thr"></b> (hasil optimasi biaya). Model hanya memberi probabilitas; manajer operasional yang memutuskan.</p>
+</div>
+</div>
+
+<div class="grid">
+<div class="card"><h2>Deskriptif: % terlambat per kota</h2><div id="c1"></div></div>
+<div class="card"><h2>Diagnostik: faktor penyebab</h2><div id="c2"></div></div>
+</div>
+
+<div class="card scroll"><h2>Evaluasi: perbandingan model (data uji)</h2>
+<table><thead><tr><th>Model</th><th>Akurasi</th><th>Recall</th><th>F1</th><th>ROC-AUC</th></tr></thead><tbody>
+<tr><td>Baseline (tebak mayoritas)</td><td>0,857</td><td>0,000</td><td>0,000</td><td>0,500</td></tr>
+<tr><td class="best">Logistic Regression</td><td>0,718</td><td>0,671</td><td class="best">0,406</td><td>0,758</td></tr>
+<tr><td>Decision Tree</td><td>0,675</td><td>0,482</td><td>0,298</td><td>0,629</td></tr>
+<tr><td>Random Forest</td><td>0,809</td><td>0,294</td><td>0,307</td><td>0,702</td></tr></tbody></table>
+<p class="note">Baseline punya akurasi tertinggi tetapi recall 0: pada data tidak seimbang, akurasi menyesatkan. Model yang dipakai di formulir ini adalah Logistic Regression.</p></div>
+
+<div class="card"><h2>Data traps yang ditangani</h2>
+<ul class="why"><li><b>Join berlebihan:</b> 3.000 baris membengkak menjadi 9.000 bila cuaca di-join langsung; diagregasi dulu.</li>
+<li><b>Anomali sistem:</b> migrasi server 10–11 Maret mencatat semua paket “tepat waktu”; dibuang berdasarkan pengetahuan domain.</li>
+<li><b>Imbalance &amp; leakage:</b> pakai class weight dan recall/F1; kolom lama kirim tidak dipakai sebagai fitur.</li></ul>
+<p class="note">Data simulasi untuk pembelajaran. Asumsi biaya: kompensasi Rp 50.000, intervensi Rp 8.000, efektivitas 60%.</p></div>
+</div>
+<script>
+var M={"names": ["n__jarak_km", "n__berat_kg", "n__jam_order", "n__pengalaman_bulan", "n__rating", "n__hujan_maks_mm", "n__hujan_deras", "n__akhir_pekan", "n__lewat_cutoff", "k__layanan_Express", "k__layanan_Reguler", "k__kota_Bandung", "k__kota_Jakarta", "k__kota_Makassar", "k__kota_Medan", "k__kota_Padang", "k__kota_Surabaya"], "coef": [0.91527, 0.26104, 0.1968, -0.37793, 0.09069, -0.03558, 0.4419, -0.02455, 0.22044, -0.55278, 0.32332, 0.33199, 0.49539, -0.25372, -0.40735, -0.36108, -0.03469], "b": -0.41052, "mean": [604.4688, 3.18777, 14.01602, 22.72133, 3.80493, 10.54842, 0.09233, 0.30523, 0.46627], "scale": [538.51801, 2.01574, 4.32147, 11.81506, 0.54603, 6.75023, 0.28949, 0.4605, 0.49886], "num": ["jarak_km", "berat_kg", "jam_order", "pengalaman_bulan", "rating", "hujan_maks_mm", "hujan_deras", "akhir_pekan", "lewat_cutoff"], "kota": ["Bandung", "Jakarta", "Makassar", "Medan", "Padang", "Surabaya"], "t": 0.7000000000000001};
+var JARAK={Jakarta:15,Bandung:150,Surabaya:780,Medan:1400,Makassar:1300,Padang:950};
+var $=function(i){return document.getElementById(i)};
+M.kota.forEach(function(k){var o=document.createElement("option");o.textContent=k;$("kota").appendChild(o)});
+$("kota").value="Makassar";$("thr").textContent=M.t.toFixed(2);
+$("kota").onchange=function(){$("jarak").value=JARAK[$("kota").value]};
+function bars(id,rows,max){$(id).innerHTML=rows.map(function(r){return '<div class="bar"><span>'+r[0]+'</span><div class="t"><i style="width:'+(r[1]/max*100)+'%"></i></div><b>'+r[1].toFixed(1)+'%</b></div>'}).join("")}
+bars("c1",[["Medan",25.3],["Makassar",22.6],["Padang",17.8],["Surabaya",14.5],["Bandung",8.6],["Jakarta",8.4]],30);
+bars("c2",[["Hujan deras",32.8],["Tanpa hujan deras",12.5],["Kurir ≤12 bln",18.6],["Kurir 25–48 bln",11.1],["Order ≥15.00",18.9],["Order &lt;15.00",10.4]],40);
+function hitung(){
+ var v={jarak_km:+$("jarak").value,berat_kg:+$("berat").value,jam_order:+$("jam").value,pengalaman_bulan:+$("peng").value,
+  rating:+$("rating").value,hujan_maks_mm:+$("hujan").value,hujan_deras:+$("hujan").value>=20?1:0,
+  akhir_pekan:$("wkend").checked?1:0,lewat_cutoff:+$("jam").value>=15?1:0};
+ var z=M.b,kont=[];
+ M.num.forEach(function(f,i){var c=M.coef[i]*(v[f]-M.mean[i])/M.scale[i];z+=c;kont.push([f,c])});
+ M.names.slice(M.num.length).forEach(function(n,j){var s=n.split("__")[1],p=s.split("_"),col=p[0],val=p.slice(1).join("_");
+  var on=(col==="layanan"?$("layanan").value:$("kota").value)===val;if(on){var c=M.coef[M.num.length+j];z+=c;kont.push([s,c])}});
+ var p=1/(1+Math.exp(-z)),pc=Math.round(p*1000)/10,hi=p>=M.t,md=p>=0.4;
+ var col=hi?"var(--bad)":md?"var(--wa)":"var(--ok)";
+ $("pct").textContent=pc.toFixed(1)+"%";$("pct").style.color=col;
+ $("mt").style.width=pc+"%";$("mt").style.background=col;
+ $("tag").textContent=hi?"TINJAU: risiko tinggi":md?"Waspada":"Proses normal";$("tag").style.background=col;
+ $("rec").textContent=hi?"Disarankan ditinjau manusia: prioritaskan sortir atau tugaskan kurir senior. Intervensi menyelamatkan sekitar 60% kasus."
+  :md?"Risiko sedang, di bawah ambang intervensi. Pantau, belum perlu tindakan biaya."
+  :"Risiko rendah, proses seperti biasa.";
+ var lab={jarak_km:"Jarak",berat_kg:"Berat",jam_order:"Jam order",pengalaman_bulan:"Pengalaman kurir",rating:"Rating kurir",hujan_maks_mm:"Curah hujan",hujan_deras:"Hujan deras",akhir_pekan:"Akhir pekan",lewat_cutoff:"Lewat cut-off 15.00"};
+ kont.sort(function(a,b){return Math.abs(b[1])-Math.abs(a[1])});
+ $("why").innerHTML=kont.slice(0,4).map(function(k){var n=lab[k[0]]||k[0].replace("_"," ");
+  return "<li>"+n+": "+(k[1]>0?"menaikkan":"menurunkan")+" risiko</li>"}).join("");
+}
+$("go").onclick=hitung;hitung();
+</script>
+</body></html>
